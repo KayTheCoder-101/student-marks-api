@@ -1,0 +1,5 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/MarksApi/MarksApi.csproj" />
+  </Folder>
+</Solution>
