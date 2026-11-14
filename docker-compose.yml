@@ -1,0 +1,34 @@
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: marks_user
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: marks_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - marks-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U marks_user -d marks_db"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      ConnectionStrings__Database: "Host=db;Port=5432;Database=marks_db;Username=marks_user;Password=${POSTGRES_PASSWORD}"
+      Jwt__Key: ${JWT_KEY}
+      Database__MigrateOnStartup: "true"
+      Seed__Enabled: "true"
+      Seed__TeacherPassword: ${SEED_TEACHER_PASSWORD}
+      Seed__StudentPassword: ${SEED_STUDENT_PASSWORD}
+
+volumes:
+  marks-data:

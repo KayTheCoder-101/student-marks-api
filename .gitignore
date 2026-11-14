@@ -484,3 +484,4 @@ $RECYCLE.BIN/
 # macOS and local secrets
 .DS_Store
 .env
+.env
